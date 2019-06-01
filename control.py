@@ -1,11 +1,12 @@
 import RPi.GPIO as GPIO
 import time
-import board
-import busio
+# import board
+# import busio
+import Adafruit_ADS1x15
 # import adafruit_ads1x15.ads1115 as ADS
 # from adafruit_ads1x15.analog_in import AnalogIn
 
-ads = None
+ads = Adafruit_ADS1x15.ADS1115()
 
 pins = {
     'r1': 35,
@@ -71,7 +72,8 @@ def initialPins():
     GPIO.output(pins['l_count_ok'], 1)
 
     # i2c = busio.I2C(board.SCL, board.SDA)
-    i2c = busio.I2C(5, 3)
+    print(str(ads.read_adc(0, gain=1)))
+
     # ads = ADS.ADS1115(i2c)
 
     print('initial pin success')
