@@ -32,7 +32,7 @@ pins = {
 
 def initialPins():
     global ads
-    # GPIO.setmode(GPIO.BOARD)
+    GPIO.setmode(GPIO.BOARD)
 
     GPIO.setup(pins['r1'], GPIO.OUT)
     GPIO.setup(pins['l1'], GPIO.OUT)
