@@ -27,7 +27,7 @@ class MyApp(QMainWindow):
         self.config.widget.hide()
 
         self.init_button()
-        # self.control = Control(self.setting, self.config, self.main)
+        self.control = Control(self.setting, self.config, self.main)
 
     def init_button(self):
         self.setting.button_config.clicked.connect(self.config.widget.show)
