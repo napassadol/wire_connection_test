@@ -71,6 +71,7 @@ def initialPins():
     GPIO.output(pins['l_count_ok'], 1)
 
     # i2c = busio.I2C(board.SCL, board.SDA)
+    i2c = busio.I2C(5, 3)
     # ads = ADS.ADS1115(i2c)
 
     print('initial pin success')
