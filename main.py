@@ -5,7 +5,7 @@ from templates.main import Ui_Form as Ui_main
 from templates.config import Ui_Form as Ui_config
 from templates.setting import Ui_Form as Ui_setting
 from templates.machine_setup import Ui_Form as Ui_machine
-# from control import Control
+from control import Control
 
 class MyApp(QMainWindow):
     def __init__(self, parent=None):
