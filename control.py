@@ -70,8 +70,8 @@ def initialPins():
     GPIO.output(pins['l_pass'], 1)
     GPIO.output(pins['l_count_ok'], 1)
 
-    i2c = busio.I2C(board.SCL, board.SDA)
-    ads = ADS.ADS1115(i2c)
+    # i2c = busio.I2C(board.SCL, board.SDA)
+    # ads = ADS.ADS1115(i2c)
 
     print('initial pin success')
 
@@ -105,6 +105,10 @@ class Control():
             'resistance': '500.1',
             'isolate': '10.0'
         }
+        self.count = 0
+        self.lpass = 0
+        self.fail = 0
+        self.yeild = 0
         self.setUI()
         initialPins()
 
@@ -121,6 +125,11 @@ class Control():
         self.config.label_check_connect_level.setText(str(self.param['config']['connect']))
         self.config.label_resistance_limit.setText(str(self.param['config']['resistance']))
         self.config.label_isolate_limit.setText(str(self.param['config']['isolate']))
+
+        self.main.label_count.setText('Count: ' + str(self.count))
+        self.main.label_count.setText('Pass: ' + str(self.lpass))
+        self.main.label_count.setText('Fail: ' + str(self.fail))
+        self.main.label_count.setText('Yeild: ' + str(self.yeild))
     
     def setOperator(self):
         self.param['setting'] = {
@@ -202,8 +211,13 @@ class Control():
 
     def testConnectionWire(self):
         if self.checkFerier() == False:
-            pass
-        # self.main.label_15 green
+            self.main.label_ferite.setStyleSheet("background:rgb(255, 0, 0)")
+            self.main.label_ferite.setText("FAIL")
+            return
+        
+        self.main.label_ferite.setStyleSheet("background:rgb(0, 255, 0)")
+        self.main.label_ferite.setText("PASS")
+
         GPIO.output(pins['n_pen'], 0)
         GPIO.output(pins['n_d'], 0)
         GPIO.output(pins['n_k'], 0)
@@ -213,23 +227,36 @@ class Control():
         GPIO.output(pins['r1'], 0)
         wire_conn_r1 = self.checkWireConnectionR1()
         if wire_conn_r1['status'] == False:
-            pass
+            self.main.label_wireconn_status.setStyleSheet("background:rgb(255, 0, 0)")
+            self.main.label_wireconn_status.setText("FAIL")
+            return
         
         vr1 = self.readVR1()
         if vr1 < 10:
-            pass
+            self.main.label_wireconn_status.setStyleSheet("background:rgb(255, 0, 0)")
+            self.main.label_wireconn_status.setText("FAIL")
+            return
         
         GPIO.output(pins['r1'], 1)
         GPIO.output(pins['l1'], 0)
         wire_conn_l1 = self.checkWireConnectionL1()
         if wire_conn_l1['status'] == False:
-            pass
+            self.main.label_wireconn_status.setStyleSheet("background:rgb(255, 0, 0)")
+            self.main.label_wireconn_status.setText("FAIL")
+            return
         
         vl1 = self.readVL1()
         if vl1 < 10:
-            pass
+            self.main.label_wireconn_status.setStyleSheet("background:rgb(255, 0, 0)")
+            self.main.label_wireconn_status.setText("FAIL")
+            return
         
-
+        volt_res = (vl1 + vr1) / 2
+        self.main.label_wireconn_status.setStyleSheet("background:rgb(0, 255, 0)")
+        self.main.label_wireconn_status.setText(str(volt_res))
+        
+        GPIO.output(pins['l1'], 1)
+        GPIO.output(pins['bypass'], 0)
         
 
 
